@@ -487,6 +487,22 @@ textarea { resize: vertical; }
 .cal-dot-pending { background: #3B82F6; }
 .cal-dot-approved { background: #22C55E; }
 .cal-dot-changes { background: #F97316; }
+.cal-event-dot {
+  font-size: .6rem; font-weight: 600; color: #fff;
+  background: #8B5CF6; border-radius: 4px; padding: 2px 5px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  margin-top: 2px;
+}
+.cal-event-chip-title {
+  font-size: .7rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .05em; color: #8B5CF6;
+}
+.cal-event-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: #F3F0FF; color: #6D28D9; border: 1px solid #DDD6FE;
+  border-radius: 99px; padding: 3px 10px; font-size: .75rem;
+  font-weight: 600; margin: 2px 4px 2px 0;
+}
 .cal-day-count {
   position: absolute; bottom: 6px; right: 8px;
   font-size: .65rem; font-weight: 700; color: var(--text-tertiary);

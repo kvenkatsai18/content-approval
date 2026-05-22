@@ -690,6 +690,7 @@ function renderCalendar() {
     cell.appendChild(num);
 
     const dayDrafts = getDraftsForDay(date);
+    const dayEvents = getEventsForDay(date);
     const dots = document.createElement("div");
     dots.className = "cal-day-dots";
     dayDrafts.slice(0, 4).forEach(d => {
@@ -706,32 +707,53 @@ function renderCalendar() {
       more.textContent = "+" + (dayDrafts.length - 4);
       cell.appendChild(more);
     }
+    // Event markers on the calendar (different from drafts)
+    if (dayEvents.length > 0) {
+      const ev = document.createElement("div");
+      ev.className = "cal-event-dot";
+      ev.title = dayEvents.map(e => e.icon + " " + e.name).join(" · ");
+      if (dayEvents.length === 1) {
+        ev.textContent = dayEvents[0].icon + " " + dayEvents[0].name;
+      } else {
+        ev.textContent = dayEvents[0].icon + " " + dayEvents[0].name + " +" + (dayEvents.length - 1);
+      }
+      dots.appendChild(ev);
+    }
     cell.appendChild(dots);
-    cell.addEventListener("click", () => selectCalendarDay(date, dayDrafts));
+    cell.addEventListener("click", () => selectCalendarDay(date, dayDrafts, dayEvents));
     grid.appendChild(cell);
   });
 
   renderUnscheduled();
 }
 
-function selectCalendarDay(date, dayDrafts) {
+function selectCalendarDay(date, dayDrafts, dayEvents) {
   document.querySelectorAll(".cal-day-cell").forEach(c => c.classList.remove("selected"));
   const sel = document.querySelector('.cal-day-cell[data-date="' + date.toISOString().split("T")[0] + '"]');
   if (sel) sel.classList.add("selected");
   const container = document.getElementById("cal-day-drafts");
   const dateStr = date.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
-  if (dayDrafts.length === 0) {
-    container.innerHTML = '<div class="empty-state"><p>No posts scheduled for ' + dateStr + ".</p></div>";
-  } else {
-    container.innerHTML = '<h4 style="margin-bottom:10px">' + dateStr + "</h4>" +
-      dayDrafts.map(d => '<div class="draft-card" data-id="' + d.id + '"><div class="draft-card-body"><div class="draft-card-header"><span class="platform-tag ' + d.platform + '">' + (d.platform === "linkedin" ? "LinkedIn" : "Instagram") + '</span><span class="status-badge ' + d.status + '">' + statusLabel(d.status) + '</span></div><p class="draft-preview-text">' + escHtml(d.text || "") + '</p></div><div class="draft-actions"><button class="btn btn-ghost btn-sm view-btn">View</button></div></div>').join("");
-    container.querySelectorAll(".view-btn").forEach(btn => {
-      btn.addEventListener("click", () => openReviewModal(btn.closest(".draft-card").dataset.id));
+
+  let html = '<div style="margin-bottom:12px"><strong>' + dateStr + "</strong></div>";
+
+  if (dayEvents.length > 0) {
+    html += '<div style="margin-bottom:16px"><span class="cal-event-chip-title">🎯 Events</span><div style="margin-top:6px">';
+    dayEvents.forEach(e => {
+      html += '<div class="cal-event-chip"><span>' + e.icon + ' ' + e.name + '</span></div>';
     });
-    container.querySelectorAll(".delete-btn").forEach(btn => {
-      btn.addEventListener("click", () => handleDeleteDraft(btn.closest(".draft-card").dataset.id));
-    });
+    html += '</div></div>';
   }
+
+  if (dayDrafts.length === 0 && dayEvents.length === 0) {
+    container.innerHTML = '<div class="empty-state"><p>Nothing scheduled for ' + dateStr + ".</p></div>";
+    return;
+  }
+
+  html += dayDrafts.map(d => '<div class="draft-card" data-id="' + d.id + '" style="margin-bottom:8px"><div class="draft-card-body"><div class="draft-card-header"><span class="platform-tag ' + d.platform + '">' + (d.platform === "linkedin" ? "LinkedIn" : "Instagram") + '</span><span class="status-badge ' + d.status + '">' + statusLabel(d.status) + '</span></div><p class="draft-preview-text">' + escHtml(d.text || "") + '</p></div><div class="draft-actions"><button class="btn btn-ghost btn-sm view-btn">View</button></div></div>').join("");
+  container.innerHTML = html;
+  container.querySelectorAll(".view-btn").forEach(btn => {
+    btn.addEventListener("click", () => openReviewModal(btn.closest(".draft-card").dataset.id));
+  });
 }
 
 function renderUnscheduled() {
