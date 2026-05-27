@@ -125,7 +125,15 @@ function showApp() {
   document.getElementById("user-name").textContent = currentUser.name;
   const roleBadge = document.getElementById("user-role");
   roleBadge.textContent = role === "creator" ? "Creator" : "CEO";
-  roleBadge.className = "role-badge " + role;
+  roleBadge.className = "user-role-tag";
+
+  // Set sidebar avatar
+  const avatarEl = document.getElementById("user-avatar");
+  if (currentUser.photo) {
+    avatarEl.innerHTML = '<img src="' + currentUser.photo + '" alt="' + escHtml(currentUser.name) + '" />';
+  } else {
+    avatarEl.textContent = (currentUser.name || "?").charAt(0).toUpperCase();
+  }
 
   const myDraftsTab = document.querySelector('[data-tab="my-drafts"]');
   const reviewTab = document.querySelector('[data-tab="review"]');
@@ -357,6 +365,11 @@ function renderStats() {
   document.getElementById("stat-pending").textContent = myDrafts.filter(d => d.status === "pending").length;
   document.getElementById("stat-approved").textContent = myDrafts.filter(d => d.status === "approved").length;
   document.getElementById("stat-changes").textContent = myDrafts.filter(d => d.status === "changes").length;
+
+  // Update sidebar nav badges
+  document.getElementById("nav-my-count").textContent = myDrafts.length;
+  const pendingReview = drafts.filter(d => d.status === "pending" && d.authorEmail !== currentUser.email).length;
+  document.getElementById("nav-review-count").textContent = pendingReview;
 }
 
 function renderMyDrafts() {
@@ -370,7 +383,7 @@ function renderMyDrafts() {
   if (platformFilter !== "all") myDrafts = myDrafts.filter(d => d.platform === platformFilter);
 
   if (myDrafts.length === 0) {
-    container.innerHTML = '<div class="empty-state"><p>No drafts yet. Create your first one!</p></div>';
+    container.innerHTML = '<div class="empty-state"><div class="empty-state-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><h3>No drafts yet</h3><p>Create your first draft and submit it for review.</p></div>';
     return;
   }
 
@@ -394,7 +407,7 @@ function renderMyDrafts() {
           </div>
           ${draft.feedback ? `<div class="draft-feedback">💬 ${escHtml(draft.feedback)}</div>` : ""}
         </div>
-        <div class="draft-actions">
+        <div class="draft-card-actions">
           ${canResubmit ? `<button class="btn btn-primary btn-sm resubmit-btn">Resubmit</button>` : ""}
           <button class="btn btn-ghost btn-sm view-btn">View</button>
           <button class="btn btn-ghost btn-sm delete-btn" title="Delete">🗑</button>
@@ -423,7 +436,7 @@ function renderReviewQueue() {
   reviewCount.className = "review-badge" + (pendingDrafts.length === 0 ? " zero" : "");
 
   if (pendingDrafts.length === 0) {
-    container.innerHTML = '<div class="empty-state"><p>No drafts waiting for review.</p></div>';
+    container.innerHTML = '<div class="empty-state"><div class="empty-state-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><h3>All caught up</h3><p>No drafts waiting for review right now.</p></div>';
     return;
   }
 
@@ -442,7 +455,7 @@ function renderReviewQueue() {
         </div>
         ${draft.notes ? `<div class="draft-notes-inline">📝 ${escHtml(draft.notes)}</div>` : ""}
       </div>
-      <div class="draft-actions">
+      <div class="draft-card-actions">
         <button class="btn btn-primary btn-sm review-btn">Review &amp; Edit</button>
         <button class="btn btn-ghost btn-sm delete-btn" title="Delete">🗑</button>
       </div>
@@ -465,6 +478,8 @@ function openReviewModal(draftId) {
 
   document.getElementById("review-platform-badge").textContent = draft.platform === "linkedin" ? "LinkedIn" : "Instagram";
   document.getElementById("review-platform-badge").className = "platform-tag " + draft.platform;
+  document.getElementById("review-status-badge").textContent = statusLabel(draft.status);
+  document.getElementById("review-status-badge").className = "status-badge " + draft.status;
 
   if (draft.imageUrl) {
     document.getElementById("review-image").src = draft.imageUrl;
@@ -476,7 +491,8 @@ function openReviewModal(draftId) {
   document.getElementById("review-text").textContent = draft.text;
   document.getElementById("edited-text").value = draft.editedText || draft.text;
   document.getElementById("review-notes").textContent = draft.notes || "";
-  document.getElementById("review-notes-container").classList.toggle("hidden", !draft.notes);
+  document.getElementById("preview-notes").classList.toggle("hidden", !draft.notes);
+  document.getElementById("review-notes").textContent = draft.notes || "";
   document.getElementById("review-author").textContent = draft.authorName;
   document.getElementById("review-feedback").value = "";
 
@@ -565,10 +581,10 @@ function setupEventListeners() {
   }
   document.getElementById("signout-btn").addEventListener("click", handleSignOut);
 
-  document.querySelectorAll(".tab").forEach(tab => {
+  document.querySelectorAll(".nav-item").forEach(tab => {
     tab.addEventListener("click", () => {
-      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-      document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+      document.querySelectorAll(".nav-item").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".tab-panel").forEach(c => c.classList.remove("active"));
       tab.classList.add("active");
       document.getElementById("tab-" + tab.dataset.tab).classList.add("active");
       if (tab.dataset.tab === "calendar") renderCalendar();
@@ -734,22 +750,22 @@ function selectCalendarDay(date, dayDrafts, dayEvents) {
   const container = document.getElementById("cal-day-drafts");
   const dateStr = date.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
 
-  let html = '<div style="margin-bottom:12px"><strong>' + dateStr + "</strong></div>";
+  let html = '<div style="margin-bottom:12px;font-size:.875rem;font-weight:700;color:var(--text-primary)">' + dateStr + "</div>";
 
   if (dayEvents.length > 0) {
-    html += '<div style="margin-bottom:16px"><span class="cal-event-chip-title">🎯 Events</span><div style="margin-top:6px">';
+    html += '<div style="margin-bottom:16px"><div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-tertiary);margin-bottom:6px">Events</div><div style="display:flex;flex-wrap:wrap;gap:6px">';
     dayEvents.forEach(e => {
-      html += '<div class="cal-event-chip"><span>' + e.icon + ' ' + e.name + '</span></div>';
+      html += '<span class="cal-event-chip"><span>' + e.icon + ' ' + e.name + '</span></span>';
     });
     html += '</div></div>';
   }
 
   if (dayDrafts.length === 0 && dayEvents.length === 0) {
-    container.innerHTML = '<div class="empty-state"><p>Nothing scheduled for ' + dateStr + ".</p></div>";
+    container.innerHTML = '<div class="empty-state"><div class="empty-state-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><h3>Nothing here</h3><p>No drafts or events on ' + dateStr + '.</p></div>';
     return;
   }
 
-  html += dayDrafts.map(d => '<div class="draft-card" data-id="' + d.id + '" style="margin-bottom:8px"><div class="draft-card-body"><div class="draft-card-header"><span class="platform-tag ' + d.platform + '">' + (d.platform === "linkedin" ? "LinkedIn" : "Instagram") + '</span><span class="status-badge ' + d.status + '">' + statusLabel(d.status) + '</span></div><p class="draft-preview-text">' + escHtml(d.text || "") + '</p></div><div class="draft-actions"><button class="btn btn-ghost btn-sm view-btn">View</button></div></div>').join("");
+  html += dayDrafts.map(d => '<div class="draft-card" data-id="' + d.id + '" data-status="' + d.status + '" style="margin-bottom:8px"><div class="draft-card-body"><div class="draft-card-header"><span class="platform-tag ' + d.platform + '">' + (d.platform === "linkedin" ? "LinkedIn" : "Instagram") + '</span><span class="status-badge ' + d.status + '">' + statusLabel(d.status) + '</span></div><p class="draft-preview-text">' + escHtml(d.text || "") + '</p></div><div class="draft-card-actions"><button class="btn btn-ghost btn-sm view-btn">View</button></div></div>').join("");
   container.innerHTML = html;
   container.querySelectorAll(".view-btn").forEach(btn => {
     btn.addEventListener("click", () => openReviewModal(btn.closest(".draft-card").dataset.id));
@@ -763,7 +779,7 @@ function renderUnscheduled() {
     container.innerHTML = '<p style="color:var(--text-secondary);font-size:.875rem">No unscheduled drafts.</p>';
     return;
   }
-  container.innerHTML = unscheduled.map(d => '<div class="draft-card" data-id="' + d.id + '" style="margin-bottom:8px"><div class="draft-card-body"><div class="draft-card-header"><span class="platform-tag ' + d.platform + '">' + (d.platform === "linkedin" ? "LinkedIn" : "Instagram") + '</span><span class="status-badge ' + d.status + '">' + statusLabel(d.status) + '</span></div><p class="draft-preview-text">' + escHtml(d.text || "") + '</p></div><div class="draft-actions"><button class="btn btn-ghost btn-sm view-btn">View</button><button class="btn btn-ghost btn-sm delete-btn" title="Delete">🗑</button></div></div>').join("");
+  container.innerHTML = unscheduled.map(d => '<div class="draft-card" data-id="' + d.id + '" data-status="' + d.status + '" style="margin-bottom:8px"><div class="draft-card-body"><div class="draft-card-header"><span class="platform-tag ' + d.platform + '">' + (d.platform === "linkedin" ? "LinkedIn" : "Instagram") + '</span><span class="status-badge ' + d.status + '">' + statusLabel(d.status) + '</span></div><p class="draft-preview-text">' + escHtml(d.text || "") + '</p></div><div class="draft-card-actions"><button class="btn btn-ghost btn-sm view-btn">View</button><button class="btn btn-ghost btn-sm delete-btn" title="Delete">🗑</button></div></div>').join("");
   container.querySelectorAll(".view-btn").forEach(btn => {
     btn.addEventListener("click", () => openReviewModal(btn.closest(".draft-card").dataset.id));
   });
@@ -781,4 +797,11 @@ function setupCalendarEvents() {
     calCurrentDate.setMonth(calCurrentDate.getMonth() + 1);
     renderCalendar();
   });
+  const todayBtn = document.getElementById("cal-today");
+  if (todayBtn) {
+    todayBtn.addEventListener("click", () => {
+      calCurrentDate = new Date();
+      renderCalendar();
+    });
+  }
 }

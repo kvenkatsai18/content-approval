@@ -5,144 +5,217 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Content Approval</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- Auth Screen -->
+  <!-- ─── Auth Screen ─── -->
   <div id="auth-screen" class="screen active">
-    <div class="auth-card">
-      <div class="auth-logo">CA</div>
-      <h1>Content Approval</h1>
-      <p>Sign in to manage your social media drafts</p>
-      <button id="google-signin-btn" class="btn btn-google">
-        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
-        Sign in with Google
-      </button>
-      <p class="auth-note">Restricted to authorized users only.</p>
+    <div class="auth-wrap">
+      <div class="auth-card">
+        <div class="auth-brand">
+          <div class="auth-logo">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+              <rect width="28" height="28" rx="8" fill="#4F46E5"/>
+              <path d="M8 14h12M14 8v12" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="auth-brand-text">
+            <h1>Content Approval</h1>
+            <p>Social media workflow, streamlined.</p>
+          </div>
+        </div>
+        <div class="auth-divider"></div>
+        <button id="google-signin-btn" class="btn btn-google">
+          <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+          Sign in with Google
+        </button>
+        <p class="auth-note">Only authorized team members can access this workspace.</p>
+      </div>
+      <p class="auth-footer">Powered by Firebase · Hosted on Vercel</p>
     </div>
   </div>
 
-  <!-- Main App -->
+  <!-- ─── App Shell ─── -->
   <div id="app-screen" class="screen">
 
-    <!-- Header -->
-    <header class="topbar">
-      <div class="topbar-left">
-        <span class="logo-mark">CA</span>
-        <span class="topbar-title">Content Approval</span>
-      </div>
-      <div class="topbar-right">
-        <div class="user-info">
-          <span id="user-name"></span>
-          <span id="user-role" class="role-badge"></span>
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="sidebar-top">
+        <div class="sidebar-brand">
+          <div class="sidebar-logo">
+            <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
+              <rect width="28" height="28" rx="8" fill="#4F46E5"/>
+              <path d="M8 14h12M14 8v12" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="sidebar-brand-text">
+            <span class="sidebar-brand-name">Approval</span>
+            <span class="sidebar-brand-sub">Content Workflow</span>
+          </div>
         </div>
-        <button id="signout-btn" class="btn btn-ghost">Sign out</button>
-      </div>
-    </header>
 
-    <!-- Tab Nav -->
-    <div class="tabs">
-      <button class="tab active" data-tab="my-drafts">My Drafts</button>
-      <button class="tab" data-tab="review">Review</button>
-      <button class="tab" data-tab="calendar">Calendar</button>
-    </div>
-
-    <!-- ===================== MY DRAFTS TAB ===================== -->
-    <div id="tab-my-drafts" class="tab-content active">
-
-      <!-- Stats Bar -->
-      <div class="stats-bar">
-        <div class="stat">
-          <span class="stat-num" id="stat-all">0</span>
-          <span class="stat-label">Total</span>
-        </div>
-        <div class="stat">
-          <span class="stat-num" id="stat-pending">0</span>
-          <span class="stat-label">Pending</span>
-        </div>
-        <div class="stat">
-          <span class="stat-num" id="stat-approved">0</span>
-          <span class="stat-label">Approved</span>
-        </div>
-        <div class="stat">
-          <span class="stat-num" id="stat-changes">0</span>
-          <span class="stat-label">Changes</span>
+        <div class="sidebar-nav">
+          <button class="nav-item active" data-tab="my-drafts">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+            </svg>
+            <span>My Drafts</span>
+            <span class="nav-badge" id="nav-my-count">0</span>
+          </button>
+          <button class="nav-item" data-tab="review">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+            <span>Review</span>
+            <span class="nav-badge accent" id="nav-review-count">0</span>
+          </button>
+          <button class="nav-item" data-tab="calendar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            <span>Calendar</span>
+          </button>
         </div>
       </div>
 
-      <div class="section-header">
-        <h2>My Drafts</h2>
-        <button class="btn btn-primary" id="create-draft-btn">
-          <span>+ New Draft</span>
-        </button>
-      </div>
-
-      <!-- Filter -->
-      <div class="filter-row">
-        <select id="filter-status" class="filter-select">
-          <option value="all">All Status</option>
-          <option value="draft">Draft</option>
-          <option value="pending">Pending</option>
-          <option value="approved">Approved</option>
-          <option value="changes">Needs Changes</option>
-        </select>
-        <select id="filter-platform" class="filter-select">
-          <option value="all">All Platforms</option>
-          <option value="linkedin">LinkedIn</option>
-          <option value="instagram">Instagram</option>
-        </select>
-      </div>
-
-      <!-- Draft List -->
-      <div id="draft-list" class="draft-list">
-        <div class="empty-state">
-          <p>No drafts yet. Create your first one!</p>
+      <div class="sidebar-bottom">
+        <div class="sidebar-user">
+          <div class="user-avatar" id="user-avatar"></div>
+          <div class="user-meta">
+            <span class="user-name" id="user-name"></span>
+            <span class="user-role-tag" id="user-role"></span>
+          </div>
         </div>
+        <button id="signout-btn" class="btn btn-ghost btn-sm sidebar-signout">Sign out</button>
       </div>
-    </div>
+    </nav>
 
-    <!-- ===================== REVIEW TAB ===================== -->
-    <div id="tab-review" class="tab-content">
-      <div class="section-header">
-        <h2>Review Queue</h2>
-        <span id="review-count" class="review-badge">0 pending</span>
-      </div>
-      <div id="review-list" class="draft-list">
-        <div class="empty-state">
-          <p>No drafts waiting for review.</p>
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- ── My Drafts ── -->
+      <section id="tab-my-drafts" class="tab-panel active">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">My Drafts</h2>
+            <p class="panel-subtitle">Create, track, and manage your social posts</p>
+          </div>
+          <button class="btn btn-primary" id="create-draft-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New Draft
+          </button>
         </div>
-      </div>
-    </div>
 
-    <!-- ===================== CALENDAR TAB ===================== -->
-    <div id="tab-calendar" class="tab-content">
-      <div class="section-header">
-        <h2>Content Calendar</h2>
-      </div>
-      <div class="calendar-nav">
-        <button id="cal-prev" class="btn btn-ghost">←</button>
-        <h3 id="cal-title"></h3>
-        <button id="cal-next" class="btn btn-ghost">→</button>
-      </div>
-      <div class="calendar-grid" id="calendar-grid"></div>
-      <div id="cal-day-drafts"></div>
-      <div id="cal-unscheduled">
-        <h4>Unscheduled Drafts</h4>
-        <div id="cal-unscheduled-list"></div>
-      </div>
-    </div>
+        <div class="stats-row">
+          <div class="stat-chip">
+            <span class="stat-chip-num" id="stat-all">0</span>
+            <span class="stat-chip-label">Total</span>
+          </div>
+          <div class="stat-chip">
+            <span class="stat-chip-num" id="stat-pending">0</span>
+            <span class="stat-chip-label">Pending</span>
+          </div>
+          <div class="stat-chip">
+            <span class="stat-chip-num" id="stat-approved">0</span>
+            <span class="stat-chip-label">Approved</span>
+          </div>
+          <div class="stat-chip">
+            <span class="stat-chip-num" id="stat-changes">0</span>
+            <span class="stat-chip-label">Changes</span>
+          </div>
+        </div>
 
+        <div class="filter-bar">
+          <select id="filter-status" class="filter-select">
+            <option value="all">All Status</option>
+            <option value="draft">Draft</option>
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="changes">Needs Changes</option>
+          </select>
+          <select id="filter-platform" class="filter-select">
+            <option value="all">All Platforms</option>
+            <option value="linkedin">LinkedIn</option>
+            <option value="instagram">Instagram</option>
+          </select>
+        </div>
+
+        <div id="draft-list" class="draft-list"></div>
+      </section>
+
+      <!-- ── Review ── -->
+      <section id="tab-review" class="tab-panel">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">Review Queue</h2>
+            <p class="panel-subtitle">Approve, edit, or request changes to submitted drafts</p>
+          </div>
+          <div class="review-summary" id="review-count-wrap">
+            <span class="review-count-badge" id="review-count">0</span>
+            <span class="review-count-label">pending</span>
+          </div>
+        </div>
+        <div id="review-list" class="draft-list"></div>
+      </section>
+
+      <!-- ── Calendar ── -->
+      <section id="tab-calendar" class="tab-panel">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">Content Calendar</h2>
+            <p class="panel-subtitle">Visual overview of your scheduled posts</p>
+          </div>
+        </div>
+        <div class="cal-controls">
+          <div class="cal-nav">
+            <button id="cal-prev" class="btn btn-ghost btn-sm cal-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <h3 id="cal-title" class="cal-title"></h3>
+            <button id="cal-next" class="btn btn-ghost btn-sm cal-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+          <button id="cal-today" class="btn btn-ghost btn-sm">Today</button>
+        </div>
+        <div class="calendar-wrap">
+          <div class="calendar-grid" id="calendar-grid"></div>
+          <div class="cal-legend">
+            <span class="legend-dot pending"></span>Pending
+            <span class="legend-dot approved"></span>Approved
+            <span class="legend-dot changes"></span>Changes
+            <span class="legend-dot event"></span>Calendar
+          </div>
+        </div>
+        <div id="cal-day-drafts" class="cal-day-drafts"></div>
+        <div id="cal-unscheduled" class="cal-unscheduled">
+          <div class="unscheduled-header">
+            <h4>Unscheduled Drafts</h4>
+          </div>
+          <div id="cal-unscheduled-list"></div>
+        </div>
+      </section>
+
+    </main>
   </div>
 
-  <!-- ===================== CREATE DRAFT MODAL ===================== -->
+  <!-- ─── Toast Container ─── -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ─── Create Draft Modal ─── -->
   <div id="create-modal" class="modal">
     <div class="modal-backdrop"></div>
     <div class="modal-box">
       <div class="modal-header">
-        <h3>New Draft</h3>
-        <button class="btn btn-ghost modal-close">&times;</button>
+        <div class="modal-title-group">
+          <h3>New Draft</h3>
+          <p>Create a new post and submit it for review</p>
+        </div>
+        <button class="btn btn-ghost btn-sm modal-close">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
       </div>
       <div class="modal-body">
         <div class="form-group">
@@ -153,100 +226,126 @@
               LinkedIn
             </button>
             <button class="platform-btn" data-platform="instagram">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="url(#ig-gradient)"><defs><linearGradient id="ig-gradient" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FFDC80"/><stop offset="50%" stop-color="#F56040"/><stop offset="100%" stop-color="#833AB4"/></linearGradient></defs><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24"><defs><linearGradient id="ig-g" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FFDC80"/><stop offset="50%" stop-color="#F56040"/><stop offset="100%" stop-color="#833AB4"/></linearGradient></defs><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z" fill="url(#ig-g)"/></svg>
               Instagram
             </button>
           </div>
         </div>
 
-        <div class="form-group">
-          <label>Schedule for</label>
-          <input type="datetime-local" id="draft-scheduled-at" />
+        <div class="form-row">
+          <div class="form-group">
+            <label>Schedule for</label>
+            <input type="datetime-local" id="draft-scheduled-at" />
+          </div>
         </div>
 
         <div class="form-group">
-          <label>Image</label>
+          <label>Image <span class="optional">(optional)</span></label>
           <div class="image-upload-area" id="image-upload-area">
             <input type="file" id="image-input" accept="image/*" />
             <div id="image-preview-container" class="hidden">
               <img id="image-preview" src="" alt="Preview" />
-              <button type="button" id="remove-image" class="btn btn-ghost btn-sm">Remove</button>
+              <button type="button" id="remove-image" class="btn btn-ghost btn-sm remove-img-btn">Remove</button>
             </div>
             <div id="image-placeholder">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-              <p>Click or drag to upload image</p>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <p>Click or drag an image here</p>
+              <span class="upload-hint">PNG, JPG, GIF up to 5MB</span>
             </div>
           </div>
         </div>
 
         <div class="form-group">
-          <label>Caption / Post Text</label>
-          <textarea id="draft-text" rows="8" placeholder="Write your LinkedIn or Instagram post here..."></textarea>
-          <div class="char-count"><span id="char-count">0</span> characters</div>
+          <label>
+            Caption / Post Text
+            <span class="char-count-label"><span id="char-count">0</span> chars</span>
+          </label>
+          <textarea id="draft-text" rows="6" placeholder="Write something worth sharing..."></textarea>
         </div>
 
         <div class="form-group">
-          <label>Additional Notes <span class="optional">(optional)</span></label>
-          <input type="text" id="draft-notes" placeholder="Any context or notes for the reviewer..." />
+          <label>Notes <span class="optional">(optional)</span></label>
+          <input type="text" id="draft-notes" placeholder="Context, hashtags, or instructions for the reviewer..." />
         </div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-ghost modal-close">Cancel</button>
-        <button class="btn btn-primary" id="submit-draft-btn">Submit for Review</button>
+        <button class="btn btn-primary" id="submit-draft-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Submit for Review
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- ===================== REVIEW MODAL ===================== -->
+  <!-- ─── Review Modal ─── -->
   <div id="review-modal" class="modal">
     <div class="modal-backdrop"></div>
     <div class="modal-box modal-box-wide">
       <div class="modal-header">
-        <h3>Review Draft</h3>
-        <button class="btn btn-ghost modal-close">&times;</button>
+        <div class="modal-title-group">
+          <h3>Review Draft</h3>
+          <p>Preview, edit, and decide on this submission</p>
+        </div>
+        <button class="btn btn-ghost btn-sm modal-close">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
       </div>
       <div class="modal-body">
         <div class="review-layout">
-          <!-- Left: preview -->
-          <div class="review-preview">
-            <div class="platform-indicator">
-              <span id="review-platform-badge"></span>
+          <!-- Preview pane -->
+          <div class="review-preview-pane">
+            <div class="preview-meta">
+              <span id="review-platform-badge" class="platform-tag"></span>
+              <span id="review-status-badge" class="status-badge"></span>
+              <span class="preview-author">by <span id="review-author"></span></span>
             </div>
-            <div id="review-image-container" class="review-image hidden">
+            <div id="review-image-container" class="preview-image hidden">
               <img id="review-image" src="" alt="Post image" />
             </div>
-            <div class="review-text-box">
+            <div class="preview-text-box">
               <p id="review-text"></p>
             </div>
-            <div id="review-notes-container" class="review-notes hidden">
-              <strong>Notes:</strong> <span id="review-notes"></span>
-            </div>
-            <div id="review-author-container" class="review-author">
-              Submitted by <span id="review-author"></span>
+            <div id="preview-notes" class="preview-notes hidden">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <span id="review-notes"></span>
             </div>
           </div>
 
-          <!-- Right: editor -->
-          <div class="review-editor">
+          <!-- Editor pane -->
+          <div class="review-editor-pane">
             <div class="form-group">
               <label>Edit Content</label>
-              <textarea id="edited-text" rows="8"></textarea>
+              <textarea id="edited-text" rows="7"></textarea>
             </div>
             <div class="form-group">
               <label>Scheduled for</label>
               <input type="datetime-local" id="review-scheduled-at" />
             </div>
             <div class="form-group">
-              <label>Feedback <span class="optional">(required if requesting changes)</span></label>
-              <textarea id="review-feedback" rows="3" placeholder="Leave feedback or instructions..."></textarea>
+              <label>Feedback <span class="optional">(required for changes)</span></label>
+              <textarea id="review-feedback" rows="3" placeholder="Leave constructive feedback for the creator..."></textarea>
             </div>
           </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-outline" id="save-edits-btn">💾 Save Edits</button>
-        <button class="btn btn-danger" id="request-changes-btn">Request Changes</button>
-        <button class="btn btn-success" id="approve-btn">Approve</button>
+      <div class="modal-footer review-modal-footer">
+        <div class="footer-left">
+          <button class="btn btn-outline btn-sm" id="save-edits-btn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Save Edits
+          </button>
+        </div>
+        <div class="footer-right">
+          <button class="btn btn-danger btn-sm" id="request-changes-btn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Request Changes
+          </button>
+          <button class="btn btn-success" id="approve-btn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Approve
+          </button>
+        </div>
       </div>
     </div>
   </div>
